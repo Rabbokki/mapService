@@ -3,12 +3,9 @@ package com.example.mapservice.repository;
 import com.example.mapservice.dto.Member;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-//@Repository
+@Repository
 public class MapMemberRepository implements MemberRepository{
     //전체 멤버를 저장할 맵을 선언
     public static Map<Long,Member> store = new HashMap<>();
@@ -31,22 +28,35 @@ public class MapMemberRepository implements MemberRepository{
 
     @Override
     public List<Member> findAll() {
-        return null;
+        List<Member> memberList = new ArrayList<>(store.values());
+        return memberList;
     }
 
     @Override
     public Optional<Member> findByName(String name) {
-        return Optional.empty();
+        Optional<Member> result = store.values().stream()
+                .filter(x->x.getName().equals(name))
+                .findAny();
+        //findAny : 하나라도 있으면 값 찾아주고 , 없으면 Null
+        return result;
+
+//        for (Long key : store.keySet()){
+//            if(store.get(key).getName().equals(name)){
+//                Optional<Member> r = Optional.ofNullable(store.get(key));
+//                return r;
+//            }
+//        }
     }
 
     @Override
     public void deleteById(Long id) {
-
+        store.remove(id);
     }
 
     @Override
     public Member updateById(Long memberId, Member member) {
-        return null;
+        store.put(memberId, member);
+        return store.get(memberId);
     }
 
     public void clearStore(){

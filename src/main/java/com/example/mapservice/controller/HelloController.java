@@ -35,7 +35,7 @@ public class HelloController {
 
     @GetMapping("api-object")
     @ResponseBody
-    public Hello helloApiO(@RequestParam("name") String name){
+    public Hello helloApi(@RequestParam("name") String name){
         Hello hello = new Hello();
         hello.setName(name);
         return hello;
