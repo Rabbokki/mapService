@@ -2,8 +2,11 @@ package com.example.mapservice.service;
 
 import com.example.mapservice.dto.Member;
 import com.example.mapservice.repository.MapMemberRepository;
+import com.example.mapservice.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,7 +20,7 @@ public class MemberService {
 //    private final MapMemberRepository repository;
 
     //3. 생성자 주입방법
-   private final MapMemberRepository memberRepository;
+   private final MemberRepository memberRepository;
 
     public MemberService(MapMemberRepository memberRepository) {
         this.memberRepository = memberRepository;
@@ -25,17 +28,36 @@ public class MemberService {
 
     //회원가입 기능
     public Long join(Member member){
+//        Member save = memberRepository.save(member);
+//        return save.getId();
         Optional<Member> result = memberRepository.findByName(member.getName());
-        if (result.isPresent()){
+
+        if (result.isPresent() && (result.get().getAddress().equals(member.getAddress()))){
             return -1L;
         }else {
             Member save = memberRepository.save(member);
             return save.getId();
+
         }
     }
 
     // 아이디로 검색해서 1개 찾기
     public Optional<Member> findOne(Long id){
         return memberRepository.findById(id);
+    }
+
+    //전체 리스트 출력
+    public List<Member> findAll(){
+        return memberRepository.findAll();
+    }
+
+    //유저 삭제
+    public void deleteById(Long id){
+        memberRepository.deleteById(id);
+    }
+
+    //유저 업데이트
+    public void update(Member member){
+        memberRepository.updateById(member.getId(), member);
     }
 }

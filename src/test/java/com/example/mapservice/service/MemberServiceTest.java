@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,5 +77,69 @@ class MemberServiceTest {
         //Then
         assertThat(r.getId())
                 .isEqualTo(member.getId());
+    }
+
+    @Test
+    @DisplayName("전체 리스트 출력")
+    void findAll() {
+        //Given
+        Member member = new Member();
+        member.setName("장원영");
+        member.setAddress("중국");
+        memberService.join(member);
+
+        Long firstJoinResult = memberService.join(member);
+
+        Member member2 = new Member();
+        member2.setName("안유진");
+        member2.setAddress("서울");
+        memberService.join(member2);
+        //When
+        List<Member> memberList = memberService.findAll();
+
+        assertThat(memberList.size()).isEqualTo(2);
+
+    }
+
+    @Test
+    @DisplayName("삭제 테스트")
+    void deleteById() {
+        //Given
+        Member member = new Member();
+        member.setName("장원영");
+        member.setAddress("중국");
+        memberService.join(member);
+
+        //When
+        memberService.deleteById(member.getId());
+
+
+        //Then
+        int size = memberService.findAll().size();
+        assertThat(size).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("업데이트 테스트")
+    void update() {
+        //Given
+        Member member = new Member();
+        member.setName("장원영");
+        member.setAddress("중국");
+        memberService.join(member);
+
+        //When
+        Member updateMember = new Member();
+        updateMember.setId(member.getId());
+        updateMember.setName("안유진");
+        updateMember.setAddress("서울");
+        memberService.update(updateMember);
+
+
+       //Then
+        Member result = memberService.findOne(1L).orElse(null);
+
+        assertThat(result.getName()).isEqualTo("안유진");
+        assertThat(result.getAddress()).isEqualTo("서울");
     }
 }

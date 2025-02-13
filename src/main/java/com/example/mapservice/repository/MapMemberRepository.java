@@ -29,6 +29,7 @@ public class MapMemberRepository implements MemberRepository{
     @Override
     public List<Member> findAll() {
         List<Member> memberList = new ArrayList<>(store.values());
+        System.out.println("저장된 회원 목록: " + memberList);
         return memberList;
     }
 
@@ -38,6 +39,7 @@ public class MapMemberRepository implements MemberRepository{
                 .filter(x->x.getName().equals(name))
                 .findAny();
         //findAny : 하나라도 있으면 값 찾아주고 , 없으면 Null
+        System.out.println("findByName() 결과: " + result);
         return result;
 
 //        for (Long key : store.keySet()){
